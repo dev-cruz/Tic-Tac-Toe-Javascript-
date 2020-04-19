@@ -1,16 +1,16 @@
 (function () {
     function startGame() {
         const boxes = document.querySelectorAll('.box');
-        let boardPlays = [];
-        let player = 'X';
+        const boardPlays = [];
+        let playerSymbol = 'X';
         boxes.forEach((box, index) => {
             box.onclick = () => {
                 if (boardPlays[index] == undefined) {
-                    box.innerHTML = player;
-                    boardPlays[index] = player;
+                    box.innerHTML = playerSymbol;
+                    boardPlays[index] = playerSymbol;
                     if (hasWinner(boardPlays, boxes))
-                        disableBoardPlays(boxes);
-                    player = (player == 'X') ? 'O' : 'X';
+                        disableBoard(boxes);
+                    playerSymbol = playerSymbol == 'X' ? 'O' : 'X';
                 }
             }
         })
@@ -66,33 +66,29 @@
         }
     }
 
-    function setWinner(array, value) {
-        // this message will be displayed at the end of the game...
-        const msg = document.querySelector('#pop-up span');
-        array.forEach(element => element.classList.add('winner'));
-        let winner = (value == 'X') ? 'Player 1' : 'Player 2';
-        msg.innerHTML = `${winner} wins!!<br>Do you want to play again?`;
+    function setWinner(winnerBoxes, winnerSymbol) {
+        const msgBox = document.querySelector('#winner-message');
+        winnerBoxes.forEach(element => element.classList.add('winner'));
+        let winner = winnerSymbol == 'X' ? 'Player 1' : 'Player 2';
+        msgBox.innerHTML = `${winner} wins!!<br>Do you want to play again?`;
     }
 
-    function disableBoardPlays(board) {
+    function disableBoard(board) {
         board.forEach(box => box.onclick = false);
         return endGame(board);
     }
 
     function endGame(board) {
-        const popUp = document.querySelector('#pop-up');
-        const msg = document.querySelector('#pop-up span');
-        const yes = document.querySelectorAll('#pop-up button')[0];
-        const no = document.querySelectorAll('#pop-up button')[1];
-        popUp.style.display = 'flex';
-        yes.onclick = () => {
-            popUp.style.display = 'none';
+        const popup = document.querySelector('#end-modal');
+        const yesButton = document.querySelectorAll('.end-modal__button')[0];
+        const noButton = document.querySelectorAll('.end-modal__button')[1];
+        popup.style.display = 'flex';
+        yesButton.onclick = () => {
+            popup.style.display = 'none';
             restartGame(board);
         }
-        no.onclick = () => {
-            popUp.style.display = 'none';
-            yes.style.display = 'none';
-            no.style.display = 'none';
+        noButton.onclick = () => {
+            popup.style.display = 'none';
         }
     }
     startGame();
